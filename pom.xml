@@ -51,6 +51,10 @@
 		    <id>codemc-releases</id>
 		    <url>https://repo.codemc.org/repository/maven-releases</url>
 		</repository>
+<!--		<repository>-->
+<!--			<id>github</id>-->
+<!--			<url>https://maven.pkg.github.com/BONNePlayground/PanelUtils</url>-->
+<!--		</repository>-->
 	</distributionManagement>
 
 	<properties>
