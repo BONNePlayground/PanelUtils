@@ -298,7 +298,11 @@ public class PanelUtils
 		}
 		else if (material.equals(Material.FIRE))
 		{
-			itemStack = new ItemStack(Material.FIRE_CHARGE);
+			itemStack = new ItemStack(Material.CAMPFIRE);
+		}
+		else if (material.equals(Material.SOUL_FIRE))
+		{
+			itemStack = new ItemStack(Material.SOUL_CAMPFIRE);
 		}
 		else if (material.equals(Material.AIR) || material.equals(Material.CAVE_AIR) || material.equals(Material.VOID_AIR))
 		{

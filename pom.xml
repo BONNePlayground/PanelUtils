@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>lv.id.bonne</groupId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<artifactId>panelutils</artifactId>
 
 	<repositories>
@@ -26,6 +26,22 @@
 		</repository>
 	</repositories>
 
+	<scm>
+		<connection>scm:git:https://github.com/BONNePlayground/PanelUtils.git</connection>
+		<developerConnection>scm:git:git@github.com:BONNePlayground/PanelUtils.git</developerConnection>
+		<url>https://github.com/BONNePlayground/PanelUtils</url>
+	</scm>
+
+	<ciManagement>
+		<system>jenkins</system>
+		<url>http://ci.codemc.org/job/BONNePlayground/job/PanelUtils/</url>
+	</ciManagement>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/BONNePlayground/PanelUtils/issues</url>
+	</issueManagement>
+
 	<distributionManagement>
 		<snapshotRepository>
 		    <id>codemc-snapshots</id>
@@ -40,8 +56,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>16</java.version>
-		<spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
+		<java.version>17</java.version>
+		<spigot.version>1.19-R0.1-SNAPSHOT</spigot.version>
 		<bentobox.version>1.17.0</bentobox.version>
 		<auth.version>1.5.21</auth.version>
 		<annotations.version>22.0.0</annotations.version>
