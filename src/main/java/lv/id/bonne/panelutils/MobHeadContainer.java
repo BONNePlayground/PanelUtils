@@ -1,14 +1,23 @@
 package lv.id.bonne.panelutils;
 
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import java.lang.reflect.Field;
-import java.util.*;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import world.bentobox.bentobox.BentoBox;
 
@@ -106,7 +115,11 @@ public enum MobHeadContainer
 	ALLAY("a975dd11-542b-4c4a-9e3e-2a254b0eb6b7", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MwMzg5MTc3ZGJhYTkyZjBkNWZmZGY4NDg4NjJjN2Y5YjM2ZGYyMjJmYmZkNzM3ZTI2MzlkYzMwNTllMGNmMyJ9fX0="),
 	FROG("633dcca1-b60b-4d59-91b1-146a4a566eca", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzY4Nzc4OTNlOTIwZmY1ZGZhNGI1ZmJkMTRkYWJlZTJlNjMwOGE2Zjk3YzNhMTliMDhlMjQxYTI5ZWI5YTVjMyJ9fX0="),
 	TADPOLE("52c22c74-f079-4b5d-b296-ce289355ea45", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2RhZjE2NTNiNWY1OWI1ZWM1YTNmNzk2MDljYjQyMzM1NzlmZWYwN2U2OTNiNjE3NDllMDkwMDE0OWVkZjU2MyJ9fX0="),
-	WARDEN("8dac825b-3820-491f-b5a4-8f6c6021248b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmMzg3OWI3MzcxMjc0ODVlYjM1ZGRlZTc0OGQwNmNmOTE0YjE5M2Q5Nzc1M2FlMzRlOTIyMzA4NDI4MzFmYiJ9fX0=");
+	WARDEN("8dac825b-3820-491f-b5a4-8f6c6021248b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmMzg3OWI3MzcxMjc0ODVlYjM1ZGRlZTc0OGQwNmNmOTE0YjE5M2Q5Nzc1M2FlMzRlOTIyMzA4NDI4MzFmYiJ9fX0="),
+	// Since 1.20
+	CAMEL("a57bccc1-abdc-47f8-8ea8-a3452cc73f80", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTY3ZDQ1OTczNDAxNjZlMTk3OGE2NjhhMDZiZjU3NTZjMTdiNGNiNWI0MGFiOGZmMjQ0MDkzYjZiOGJjNzVkMyJ9fX0="),
+	SNIFFER("f699a97c-84bb-44cf-b66c-f31bdc69568e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg0YTdlN2ZlMTk3YjdlNzQxOWI1MWQ0NmNjMjMzNTUxYjllYzg5OWRlMWFmZTdmNjUzZTRmOGZiMjZhNjg2ZSJ9fX0=");
+
 
 // ---------------------------------------------------------------------
 // Section: Variables
@@ -201,25 +214,52 @@ public enum MobHeadContainer
 		}
 
 		// Set correct Skull texture
-		if (meta != null && this.textureValue != null && !this.textureValue.isEmpty())
+		if (meta instanceof SkullMeta skullMeta && this.textureValue != null && !this.textureValue.isEmpty())
 		{
-			GameProfile profile = new GameProfile(UUID.fromString(this.uuid), null);
-			profile.getProperties().put("textures", new Property("textures", this.textureValue));
-
 			try
 			{
-				Field profileField = meta.getClass().getDeclaredField("profile");
-				profileField.setAccessible(true);
-				profileField.set(meta, profile);
-				item.setItemMeta(meta);
+				PlayerProfile profile = Bukkit.createPlayerProfile(UUID.fromString(this.uuid), this.name().toLowerCase());
+				profile.getTextures().setSkin(MobHeadContainer.getSkinURLFromBase64(this.textureValue));
+				skullMeta.setOwnerProfile(profile);
+				item.setItemMeta(skullMeta);
 			}
-			catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
+			catch (IllegalArgumentException e)
 			{
 				BentoBox.getInstance().log("Error while creating Skull Icon");
 			}
 		}
 
 		return item;
+	}
+
+
+	/**
+	 * This method parses base64 encoded string into URL.
+	 * @param base64 Base64 encoded string.
+	 * @return URL of the skin.
+	 */
+	private static URL getSkinURLFromBase64(String base64)
+	{
+		/*
+		 * Base64 encoded string is in format: { "timestamp": 0, "profileId": "UUID",
+		 * "profileName": "USERNAME", "textures": { "SKIN": { "url":
+		 * "https://textures.minecraft.net/texture/TEXTURE_ID" }, "CAPE": { "url":
+		 * "https://textures.minecraft.net/texture/TEXTURE_ID" } } }
+		 */
+		try
+		{
+			String decoded = new String(Base64.getDecoder().decode(base64));
+			JsonObject json = new Gson().fromJson(decoded, JsonObject.class);
+			String url = json.getAsJsonObject("textures").
+				getAsJsonObject("SKIN").
+				get("url").
+				getAsString();
+			return new URL(url);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 
 

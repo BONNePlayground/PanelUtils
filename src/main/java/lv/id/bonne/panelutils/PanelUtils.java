@@ -171,6 +171,7 @@ public class PanelUtils
 			case GIANT, ZOMBIE -> itemStack = new ItemStack(Material.ZOMBIE_HEAD);
 			case CREEPER -> itemStack = new ItemStack(Material.CREEPER_HEAD);
 			case ENDER_DRAGON -> itemStack = new ItemStack(Material.DRAGON_HEAD);
+			case PIGLIN -> itemStack = new ItemStack(Material.PIGLIN_HEAD);
 			default -> {
 				MobHeadContainer head = MobHeadContainer.getHead(entity.name());
 
@@ -331,6 +332,14 @@ public class PanelUtils
 		else if (material.equals(Material.BIG_DRIPLEAF_STEM))
 		{
 			itemStack = new ItemStack(Material.BIG_DRIPLEAF);
+		}
+		else if (material.equals(Material.TORCHFLOWER_CROP))
+		{
+			itemStack = new ItemStack(Material.TORCHFLOWER);
+		}
+		else if (material.equals(Material.PITCHER_CROP))
+		{
+			itemStack = new ItemStack(Material.PITCHER_PLANT);
 		}
 		else
 		{
